@@ -70,10 +70,9 @@ function renderSummary() {
 
   summaryToday.innerText = `${sumToday.toFixed(2)} ชม.`;
   summaryMonth.innerHTML = `
-    ${sumMonth.toFixed(2)} ชม.<br/>
-    ➤ ปกติ: ${typeMonth['ปกติ'].toFixed(2)}  
-    ➤ วันหยุด: ${typeMonth['วันหยุด'].toFixed(2)}  
-    ➤ กิจกรรม: ${typeMonth['กิจกรรม'].toFixed(2)}
+    ➤ ปกติ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${typeMonth['ปกติ'].toFixed(2)} ชม.<br/>
+    ➤ วันหยุด&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${typeMonth['วันหยุด'].toFixed(2)} ชม.<br/>
+    ➤ กิจกรรม&nbsp;&nbsp;&nbsp;&nbsp;: ${typeMonth['กิจกรรม'].toFixed(2)} ชม.
   `;
   summaryYear.innerText = `${sumYear.toFixed(2)} ชม.`;
 
