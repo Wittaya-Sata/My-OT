@@ -1,0 +1,45 @@
+!DOCTYPE html
+html lang=th
+head
+  meta charset=UTF-8 
+  meta name=viewport content=width=device-width, initial-scale=1.0 
+  titleOT Trackertitle
+  link rel=stylesheet href=style.css 
+head
+body
+  div class=container
+    header
+      h1OT Trackerh1
+      button id=toggleDark🌙button
+    header
+
+    section class=form
+      input type=date id=otDate 
+      input type=number id=otHours placeholder=ชั่วโมง OT min=0 step=0.1 
+      button id=addBtnบันทึกbutton
+    section
+
+    section class=summary
+      h2สรุป OTh2
+      select id=summaryType
+        option value=dailyรายวันoption
+        option value=monthlyรายเดือนoption
+        option value=yearlyรายปีoption
+      select
+      div id=summaryResultdiv
+    section
+
+    section class=list
+      h2รายการทั้งหมดh2
+      ul id=otListul
+    section
+
+    footer
+      button id=exportBtn📤 Export CSVbutton
+      button id=clearBtn🗑 ล้างข้อมูลbutton
+    footer
+  div
+
+  script src=app.jsscript
+body
+html
