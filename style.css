@@ -135,15 +135,6 @@ canvas {
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
 
-.list-section li button {
-  background: var(--error);
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-}
-
 footer {
   display: flex;
   gap: 1rem;
