@@ -7,44 +7,53 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
+  <div class="app-wrapper">
     <header>
-      <h1>ระบบบันทึก OT</h1>
+      <h1>OT Tracker</h1>
       <button id="toggleDark">🌙</button>
     </header>
 
-    <section class="form">
-      <label>วันที่</label>
-      <input type="date" id="otDate" />
-
-      <label>เวลาเริ่ม</label>
-      <input type="time" id="startTime" />
-
-      <label>เวลาสิ้นสุด</label>
-      <input type="time" id="endTime" />
-
-      <label>ประเภท OT</label>
-      <select id="otType">
-        <option value="ปกติ">OT วันทำงานปกติ</option>
-        <option value="วันหยุด">OT วันหยุด</option>
-        <option value="กิจกรรม">OT กิจกรรม</option>
-      </select>
-
-      <label>เหตุผล</label>
-      <textarea id="reason" rows="2" placeholder="ระบุเหตุผลเพิ่มเติม"></textarea>
-
-      <button id="addBtn">บันทึก OT</button>
+    <section class="form-section">
+      <div class="form-grid">
+        <div>
+          <label>วันที่</label>
+          <input type="date" id="otDate" />
+        </div>
+        <div>
+          <label>เวลาเริ่ม</label>
+          <input type="time" id="startTime" />
+        </div>
+        <div>
+          <label>เวลาสิ้นสุด</label>
+          <input type="time" id="endTime" />
+        </div>
+        <div>
+          <label>ประเภท OT</label>
+          <select id="otType">
+            <option value="ปกติ">OT ปกติ</option>
+            <option value="วันหยุด">OT วันหยุด</option>
+            <option value="กิจกรรม">OT กิจกรรม</option>
+          </select>
+        </div>
+        <div class="full-row">
+          <label>เหตุผล</label>
+          <textarea id="reason" rows="2" placeholder="ระบุเหตุผลเพิ่มเติม"></textarea>
+        </div>
+      </div>
+      <button id="addBtn" class="primary">บันทึก OT</button>
     </section>
 
-    <section class="summary">
+    <section class="summary-section">
       <h2>สรุปยอด OT</h2>
-      <div id="summaryToday"></div>
-      <div id="summaryMonth"></div>
-      <div id="summaryYear"></div>
+      <div class="summary-cards">
+        <div class="card">📅 วันนี้: <span id="summaryToday">0.00 ชม.</span></div>
+        <div class="card">📆 เดือนนี้: <span id="summaryMonth">-</span></div>
+        <div class="card">🗓 ปีนี้: <span id="summaryYear">-</span></div>
+      </div>
       <canvas id="otChart"></canvas>
     </section>
 
-    <section class="list">
+    <section class="list-section">
       <h2>รายการ OT ทั้งหมด</h2>
       <ul id="otList"></ul>
     </section>
