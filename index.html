@@ -20,13 +20,9 @@
     </section>
 
     <section class="summary">
-      <h2>สรุป OT</h2>
-      <select id="summaryType">
-        <option value="daily">รายวัน</option>
-        <option value="monthly">รายเดือน</option>
-        <option value="yearly">รายปี</option>
-      </select>
+      <h2>สรุป OT รายเดือน</h2>
       <div id="summaryResult"></div>
+      <canvas id="otChart"></canvas>
     </section>
 
     <section class="list">
@@ -40,6 +36,7 @@
     </footer>
   </div>
 
+  <script src="chart.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
