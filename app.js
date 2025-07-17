@@ -70,7 +70,7 @@ function renderSummary() {
 
   summaryToday.innerText = `${sumToday.toFixed(2)} ชม.`;
   summaryMonth.innerHTML = `
-    📆 เดือนนี้:<br/>
+
     ➤ ปกติ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${typeMonth['ปกติ'].toFixed(2)} ชม.<br/>
     ➤ วันหยุด&nbsp;&nbsp;: ${typeMonth['วันหยุด'].toFixed(2)} ชม.<br/>
     ➤ กิจกรรม&nbsp;: ${typeMonth['กิจกรรม'].toFixed(2)} ชม.
