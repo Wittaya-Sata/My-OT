@@ -9,24 +9,43 @@
 <body>
   <div class="container">
     <header>
-      <h1>OT Tracker</h1>
+      <h1>ระบบบันทึก OT</h1>
       <button id="toggleDark">🌙</button>
     </header>
 
     <section class="form">
+      <label>วันที่</label>
       <input type="date" id="otDate" />
-      <input type="number" id="otHours" placeholder="ชั่วโมง OT" min="0" step="0.1" />
-      <button id="addBtn">บันทึก</button>
+
+      <label>เวลาเริ่ม</label>
+      <input type="time" id="startTime" />
+
+      <label>เวลาสิ้นสุด</label>
+      <input type="time" id="endTime" />
+
+      <label>ประเภท OT</label>
+      <select id="otType">
+        <option value="ปกติ">OT วันทำงานปกติ</option>
+        <option value="วันหยุด">OT วันหยุด</option>
+        <option value="กิจกรรม">OT กิจกรรม</option>
+      </select>
+
+      <label>เหตุผล</label>
+      <textarea id="reason" rows="2" placeholder="ระบุเหตุผลเพิ่มเติม"></textarea>
+
+      <button id="addBtn">บันทึก OT</button>
     </section>
 
     <section class="summary">
-      <h2>สรุป OT รายเดือน</h2>
-      <div id="summaryResult"></div>
+      <h2>สรุปยอด OT</h2>
+      <div id="summaryToday"></div>
+      <div id="summaryMonth"></div>
+      <div id="summaryYear"></div>
       <canvas id="otChart"></canvas>
     </section>
 
     <section class="list">
-      <h2>รายการทั้งหมด</h2>
+      <h2>รายการ OT ทั้งหมด</h2>
       <ul id="otList"></ul>
     </section>
 
@@ -36,7 +55,7 @@
     </footer>
   </div>
 
-  <script src="chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
