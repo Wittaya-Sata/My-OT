@@ -11,7 +11,7 @@ const summaryMonth = document.getElementById('summaryMonth');
 const summaryYear = document.getElementById('summaryYear');
 const otChart = document.getElementById('otChart');
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwT93kGhzw62_s9tJQXmvPpuOsmhldAqlpKYdr9ucOyDhW1KB3IEN6ONk-B8V-DP8Ep/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwxuTyehHP1bOt_R--GYRWKWUKJ9Hs0EB51_iID_PMdHY5VvLr40mHfFXSxkXeUXpk/exec';
 let otData = [];
 
 function calcHours(start, end) {
