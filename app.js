@@ -1,4 +1,5 @@
 let otData = JSON.parse(localStorage.getItem('otData')) || [];
+let editIndex = null;
 
 const otDate = document.getElementById('otDate');
 const startTime = document.getElementById('startTime');
@@ -22,7 +23,7 @@ function saveData() {
 function calcHours(start, end) {
   const s = new Date(`2000-01-01T${start}`);
   const e = new Date(`2000-01-01T${end}`);
-  const diff = (e - s) / 1000 / 60 / 60;
+  const diff = (e - s) / (1000 * 60 * 60);
   return diff > 0 ? diff : 0;
 }
 
@@ -35,10 +36,10 @@ function renderList() {
   otData.forEach((item, index) => {
     const li = document.createElement('li');
     li.innerHTML = `
-      <strong>${formatDate(item.date)}</strong><br />
-      เวลา: ${item.start} - ${item.end} (${item.hours} ชม.)<br />
-      ประเภท: ${item.type}<br />
-      เหตุผล: <span>${item.reason || '-'}</span><br />
+      <strong>${formatDate(item.date)}</strong><br/>
+      เวลา: ${item.start} - ${item.end} (${item.hours} ชม.)<br/>
+      ประเภท: ${item.type} | เหตุผล: ${item.reason || '-'}<br/>
+      <button onclick="edit(${index})">✏️ แก้ไข</button>
       <button onclick="remove(${index})">❌ ลบ</button>
     `;
     otList.appendChild(li);
@@ -51,33 +52,32 @@ function renderSummary() {
   const year = today.slice(0, 4);
 
   let sumToday = 0, sumMonth = 0, sumYear = 0;
-
   let typeMonth = { 'ปกติ': 0, 'วันหยุด': 0, 'กิจกรรม': 0 };
-  let chartMonthly = {};
+  let chartData = {};
 
-  otData.forEach(item => {
-    if (item.date === today) sumToday += item.hours;
-    if (item.date.startsWith(month)) {
-      sumMonth += item.hours;
-      typeMonth[item.type] += item.hours;
+  otData.forEach(d => {
+    if (d.date === today) sumToday += d.hours;
+    if (d.date.startsWith(month)) {
+      sumMonth += d.hours;
+      typeMonth[d.type] += d.hours;
     }
-    if (item.date.startsWith(year)) sumYear += item.hours;
+    if (d.date.startsWith(year)) sumYear += d.hours;
 
-    const key = item.date.slice(0, 7);
-    chartMonthly[key] = chartMonthly[key] || { 'ปกติ': 0, 'วันหยุด': 0, 'กิจกรรม': 0 };
-    chartMonthly[key][item.type] += item.hours;
+    const key = d.date.slice(0, 7);
+    chartData[key] = chartData[key] || { 'ปกติ': 0, 'วันหยุด': 0, 'กิจกรรม': 0 };
+    chartData[key][d.type] += d.hours;
   });
 
-  summaryToday.innerHTML = `📅 วันนี้: ${sumToday.toFixed(2)} ชม.`;
+  summaryToday.innerText = `${sumToday.toFixed(2)} ชม.`;
   summaryMonth.innerHTML = `
-    📆 เดือนนี้: ${sumMonth.toFixed(2)} ชม.<br />
+    ${sumMonth.toFixed(2)} ชม.<br/>
     ➤ ปกติ: ${typeMonth['ปกติ'].toFixed(2)}  
     ➤ วันหยุด: ${typeMonth['วันหยุด'].toFixed(2)}  
     ➤ กิจกรรม: ${typeMonth['กิจกรรม'].toFixed(2)}
   `;
-  summaryYear.innerHTML = `🗓 รวมปีนี้: ${sumYear.toFixed(2)} ชม.`;
+  summaryYear.innerText = `${sumYear.toFixed(2)} ชม.`;
 
-  renderChart(chartMonthly);
+  renderChart(chartData);
 }
 
 function renderChart(dataObj) {
@@ -104,31 +104,52 @@ function renderChart(dataObj) {
   });
 }
 
+function edit(index) {
+  const item = otData[index];
+  otDate.value = item.date;
+  startTime.value = item.start;
+  endTime.value = item.end;
+  otType.value = item.type;
+  reason.value = item.reason || '';
+  editIndex = index;
+  addBtn.innerText = 'อัปเดตข้อมูล OT';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 addBtn.onclick = () => {
   if (!otDate.value || !startTime.value || !endTime.value || !otType.value) {
-    alert('กรอกข้อมูลให้ครบ');
+    alert('กรุณากรอกข้อมูลให้ครบ');
     return;
   }
-
   const hours = calcHours(startTime.value, endTime.value);
   if (hours <= 0) {
-    alert('กรุณาตรวจสอบเวลาให้ถูกต้อง');
+    alert('เวลาไม่ถูกต้อง');
     return;
   }
 
-  otData.push({
+  const newEntry = {
     date: otDate.value,
     start: startTime.value,
     end: endTime.value,
     hours: parseFloat(hours.toFixed(2)),
     type: otType.value,
     reason: reason.value.trim()
-  });
+  };
+
+  if (editIndex !== null) {
+    otData[editIndex] = newEntry;
+    editIndex = null;
+    addBtn.innerText = 'บันทึก OT';
+  } else {
+    otData.push(newEntry);
+  }
 
   saveData();
   renderList();
   renderSummary();
+
   otDate.value = startTime.value = endTime.value = reason.value = '';
+  otType.value = 'ปกติ';
 };
 
 function remove(index) {
