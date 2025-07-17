@@ -29,12 +29,15 @@ function sendToSheet(entry) {
   })
     .then(res => res.text())
     .then(msg => {
-      alert('✅ ส่งข้อมูลไปยัง Google Sheet แล้ว');
+      alert('✅ ส่งข้อมูลสำเร็จแล้ว');
       otDate.value = startTime.value = endTime.value = reason.value = '';
       otType.value = 'ปกติ';
       fetchDataFromSheet();
     })
-    .catch(err => alert('❌ ส่งข้อมูลไม่สำเร็จ'));
+    .catch(err => {
+      alert('❌ ส่งข้อมูลไม่สำเร็จ');
+      console.error(err);
+    });
 }
 
 addBtn.onclick = () => {
@@ -54,8 +57,8 @@ addBtn.onclick = () => {
     start: startTime.value,
     end: endTime.value,
     hours: parseFloat(hours.toFixed(2)),
-    type: otType.value,
-    reason: reason.value.trim()
+    type: otType.value.trim() || '-',
+    reason: reason.value.trim() || '-'
   };
 
   sendToSheet(entry);
@@ -79,7 +82,7 @@ function renderList() {
     li.innerHTML = `
       <strong>${item.date}</strong><br/>
       เวลา: ${item.start} - ${item.end} (${item.hours} ชม.)<br/>
-      ประเภท: ${item.type} | เหตุผล: ${item.reason || '-'}
+      ประเภท: ${item.type} | เหตุผล: ${item.reason}
     `;
     otList.appendChild(li);
   });
@@ -99,13 +102,13 @@ function renderSummary() {
     if (d.date === today) sumToday += h;
     if (d.date.startsWith(month)) {
       sumMonth += h;
-      typeMonth[d.type] += h;
+      if (d.type in typeMonth) typeMonth[d.type] += h;
     }
     if (d.date.startsWith(year)) sumYear += h;
 
     const key = d.date.slice(0, 7);
     chartData[key] = chartData[key] || { 'ปกติ': 0, 'วันหยุด': 0, 'กิจกรรม': 0 };
-    chartData[key][d.type] += h;
+    if (d.type in chartData[key]) chartData[key][d.type] += h;
   });
 
   summaryToday.innerText = `${sumToday.toFixed(2)} ชม.`;
