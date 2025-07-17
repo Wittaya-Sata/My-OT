@@ -53,9 +53,9 @@ addBtn.onclick = () => {
   }
 
   const entry = {
-    date: otDate.value,
-    start: startTime.value,
-    end: endTime.value,
+    date: String(otDate.value),
+    start: String(startTime.value),
+    end: String(endTime.value),
     hours: parseFloat(hours.toFixed(2)),
     type: otType.value.trim() || '-',
     reason: reason.value.trim() || '-'
