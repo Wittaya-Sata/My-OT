@@ -1,14 +1,27 @@
+:root {
+  --bg-light: #f4f6f8;
+  --bg-dark: #1e1e1e;
+  --card-light: #ffffff;
+  --card-dark: #2e2e2e;
+  --text-light: #333;
+  --text-dark: #ddd;
+  --primary: #007bff;
+  --accent: #17a2b8;
+  --border: #ccc;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f8;
-  color: #333;
+  background: var(--bg-light);
+  color: var(--text-light);
+  transition: all 0.3s ease;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 650px;
   margin: auto;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 header {
@@ -17,28 +30,54 @@ header {
   align-items: center;
 }
 
-header h1 {
-  font-size: 1.5rem;
+h1 {
+  font-size: 1.8rem;
+  margin: 0;
 }
 
-input, button {
+section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--card-light);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+input, select, textarea {
   width: 100%;
   padding: 0.75rem;
-  margin-top: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  margin-top: 0.25rem;
   font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
 }
 
 button {
-  background-color: #007bff;
-  color: white;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: #fff;
   font-weight: bold;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background: var(--accent);
 }
 
 ul {
@@ -47,32 +86,53 @@ ul {
 }
 
 li {
-  background: #ffffff;
-  padding: 0.5rem;
+  background: #fff;
+  padding: 0.75rem;
   margin-bottom: 0.5rem;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-li button {
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
+li span {
+  font-size: 0.9rem;
+  color: #555;
 }
 
-.dark-mode {
-  background: #222;
-  color: #ddd;
-}
-
-.dark-mode .container {
-  background: #333;
+footer {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  margin-top: 2rem;
 }
 
 canvas {
   margin-top: 1rem;
   width: 100%;
   max-height: 200px;
+}
+
+.dark-mode {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.dark-mode section {
+  background: var(--card-dark);
+  color: var(--text-dark);
+}
+
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+  background: #444;
+  color: #ddd;
+  border: 1px solid #555;
+}
+
+.dark-mode button {
+  background: var(--accent);
 }
