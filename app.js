@@ -4,14 +4,19 @@ const otDate = document.getElementById('otDate');
 const otHours = document.getElementById('otHours');
 const addBtn = document.getElementById('addBtn');
 const otList = document.getElementById('otList');
-const summaryType = document.getElementById('summaryType');
 const summaryResult = document.getElementById('summaryResult');
 const exportBtn = document.getElementById('exportBtn');
 const clearBtn = document.getElementById('clearBtn');
 const toggleDark = document.getElementById('toggleDark');
+const chartCanvas = document.getElementById('otChart');
 
 function saveData() {
   localStorage.setItem('otData', JSON.stringify(otData));
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('th-TH');
 }
 
 function renderList() {
@@ -19,7 +24,7 @@ function renderList() {
   otData.forEach((item, index) => {
     const li = document.createElement('li');
     li.innerHTML = `
-      ${item.date} — ${item.hours} ชม.
+      ${formatDate(item.date)} — ${item.hours} ชม.
       <span>
         <button onclick="edit(${index})">✏️</button>
         <button onclick="remove(${index})">❌</button>
@@ -28,23 +33,39 @@ function renderList() {
   });
 }
 
-function renderSummary() {
-  const type = summaryType.value;
-  const grouped = {};
-
-  otData.forEach(item => {
-    const date = new Date(item.date);
-    let key = '';
-    if (type === 'daily') key = item.date;
-    if (type === 'monthly') key = `${date.getFullYear()}-${date.getMonth()+1}`;
-    if (type === 'yearly') key = `${date.getFullYear()}`;
-    grouped[key] = (grouped[key] || 0) + parseFloat(item.hours);
+function renderSummaryAndChart() {
+  const monthly = {};
+  otData.forEach(d => {
+    const date = new Date(d.date);
+    const key = `${date.getFullYear()}-${date.getMonth() + 1}`;
+    monthly[key] = (monthly[key] || 0) + parseFloat(d.hours);
   });
 
-  summaryResult.innerHTML = Object.entries(grouped)
-    .sort()
-    .map(([k, v]) => `<div>${k}: ${v.toFixed(1)} ชม.</div>`)
-    .join('');
+  summaryResult.innerHTML = '';
+  const labels = [];
+  const data = [];
+
+  Object.entries(monthly).sort().forEach(([month, total]) => {
+    summaryResult.innerHTML += `<div>${month}: ${total.toFixed(1)} ชม.</div>`;
+    labels.push(month);
+    data.push(total.toFixed(1));
+  });
+
+  new Chart(chartCanvas, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'ยอด OT / เดือน',
+        data,
+        backgroundColor: '#007bff',
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } },
+    }
+  });
 }
 
 addBtn.onclick = () => {
@@ -52,18 +73,18 @@ addBtn.onclick = () => {
   otData.push({ date: otDate.value, hours: otHours.value });
   saveData();
   renderList();
-  renderSummary();
+  renderSummaryAndChart();
   otDate.value = '';
   otHours.value = '';
 };
 
 function edit(index) {
-  const newHours = prompt('แก้ไขชั่วโมง OT', otData[index].hours);
-  if (newHours !== null) {
+  const newHours = prompt('แก้ไข OT', otData[index].hours);
+  if (newHours) {
     otData[index].hours = newHours;
     saveData();
     renderList();
-    renderSummary();
+    renderSummaryAndChart();
   }
 }
 
@@ -72,14 +93,15 @@ function remove(index) {
     otData.splice(index, 1);
     saveData();
     renderList();
-    renderSummary();
+    renderSummaryAndChart();
   }
 }
 
-summaryType.onchange = renderSummary;
-
 exportBtn.onclick = () => {
-  const csv = 'วันที่,ชั่วโมง\n' + otData.map(d => `${d.date},${d.hours}`).join('\n');
+  let csv = 'วันที่,ชั่วโมง\n';
+  otData.forEach(d => {
+    csv += `${d.date},${d.hours}\n`;
+  });
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -92,13 +114,13 @@ clearBtn.onclick = () => {
     otData = [];
     saveData();
     renderList();
-    renderSummary();
+    renderSummaryAndChart();
   }
 };
 
 toggleDark.onclick = () => {
-  document.body.classList.toggle('dark');
+  document.body.classList.toggle('dark-mode');
 };
 
 renderList();
-renderSummary();
+renderSummaryAndChart();
