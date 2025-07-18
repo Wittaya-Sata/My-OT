@@ -1,70 +1,125 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OT Tracker</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app-wrapper">
-    <header>
-      <h1>OT Tracker</h1>
-      <button id="toggleDark">🌙</button>
-    </header>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>บันทึก OT</title>
+    <base target="_top">
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 500px;
+        margin: auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      h2 { text-align: center; color: #1976d2; }
+      label { margin-top: 10px; font-weight: bold; display: block; }
+      input, select, textarea {
+        width: 100%; padding: 8px; margin-top: 4px;
+        border: 1px solid #ccc; border-radius: 4px;
+        box-sizing: border-box;
+      }
+      input[readonly] {
+        background-color: #eee; color: #333;
+      }
+      button {
+        margin-top: 15px; width: 100%;
+        padding: 10px; background-color: #1976d2;
+        color: white; border: none; border-radius: 4px;
+        font-weight: bold; cursor: pointer;
+      }
+      button:hover { background-color: #125aa7; }
+      .status {
+        margin-top: 15px; text-align: center;
+        font-weight: bold; color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>ฟอร์มบันทึก OT</h2>
+      <form id="otForm">
+        <label>วันที่</label>
+        <input type="date" name="date" required>
 
-    <section class="form-section">
-      <div class="form-grid">
-        <div>
-          <label>วันที่</label>
-          <input type="date" id="otDate" />
-        </div>
-        <div>
-          <label>เวลาเริ่ม</label>
-          <input type="time" id="startTime" />
-        </div>
-        <div>
-          <label>เวลาสิ้นสุด</label>
-          <input type="time" id="endTime" />
-        </div>
-        <div>
-          <label>ประเภท OT</label>
-          <select id="otType">
-            <option value="ปกติ">OT ปกติ</option>
-            <option value="วันหยุด">OT วันหยุด</option>
-            <option value="กิจกรรม">OT กิจกรรม</option>
-          </select>
-        </div>
-        <div class="full-row">
-          <label>เหตุผล</label>
-          <textarea id="reason" rows="2" placeholder="ระบุเหตุผลเพิ่มเติม"></textarea>
-        </div>
-      </div>
-      <button id="addBtn" class="primary">บันทึก OT</button>
-    </section>
+        <label>เวลาเริ่ม</label>
+        <input type="time" name="start" id="start" required>
 
-    <section class="summary-section">
-      <h2>สรุปยอด OT</h2>
-      <div class="summary-cards">
-        <div class="card">📅 วันนี้: <span id="summaryToday">0.00 ชม.</span></div>
-        <div class="card" id="summaryMonth">📆 เดือนนี้:</div>
-        <div class="card">🗓 ปีนี้: <span id="summaryYear">-</span></div>
-      </div>
-      <canvas id="otChart"></canvas>
-    </section>
+        <label>เวลาสิ้นสุด</label>
+        <input type="time" name="end" id="end" required>
 
-    <section class="list-section">
-      <h2>รายการ OT ทั้งหมด</h2>
-      <ul id="otList"></ul>
-    </section>
+        <label>จำนวนชั่วโมง (คำนวณอัตโนมัติ)</label>
+        <input type="number" name="hours" id="hours" step="0.1" readonly>
 
-    <footer>
-      <button id="exportBtn">📤 Export CSV</button>
-      <button id="clearBtn">🗑 ล้างข้อมูล</button>
-    </footer>
-  </div>
+        <label>ประเภท</label>
+        <select name="type">
+          <option value="Normal">Normal</option>
+          <option value="Holiday">Holiday</option>
+        </select>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="app.js"></script>
-</body>
+        <label>เหตุผล</label>
+        <textarea name="reason" rows="2"></textarea>
+
+        <button type="submit">บันทึก OT</button>
+        <div class="status" id="status"></div>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("otForm");
+      const statusDiv = document.getElementById("status");
+
+      function calculateHours() {
+        const start = form.start.value;
+        const end = form.end.value;
+
+        if (start && end) {
+          const startTime = new Date(`1970-01-01T${start}:00`);
+          const endTime = new Date(`1970-01-01T${end}:00`);
+          const diffMs = endTime - startTime;
+          const diffHours = diffMs / (1000 * 60 * 60);
+          form.hours.value = diffHours > 0 ? diffHours.toFixed(2) : "0.00";
+        } else {
+          form.hours.value = "";
+        }
+      }
+
+      form.start.addEventListener("change", calculateHours);
+      form.end.addEventListener("change", calculateHours);
+
+      form.onsubmit = event => {
+        event.preventDefault();
+
+        const data = {
+          date: form.date.value,
+          start: form.start.value,
+          end: form.end.value,
+          hours: form.hours.value,
+          type: form.type.value,
+          reason: form.reason.value
+        };
+
+        fetch("", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.text())
+        .then(msg => {
+          statusDiv.textContent = msg === "OK"
+            ? "✅ บันทึกสำเร็จ!"
+            : "❌ ส่งข้อมูลไม่สำเร็จ";
+        })
+        .catch(err => {
+          statusDiv.textContent = "❌ เกิดข้อผิดพลาด: " + err;
+        });
+      };
+    </script>
+  </body>
 </html>
