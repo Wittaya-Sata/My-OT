@@ -11,7 +11,7 @@ const summaryMonth = document.getElementById('summaryMonth');
 const summaryYear = document.getElementById('summaryYear');
 const otChart = document.getElementById('otChart');
 
-const API_URL = 'https://corsproxy.io/?https://script.google.com/macros/s/AKfycbylPykS0nClQHhDM0-3CTYZ7QLZ02VKjRQUYcuSMRp6yl72Ql_yj9IeT19BbjvE4LsKOQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbx0dIAtZ_YZj5OhdNH3eoBMLx7hlRrP7G9d9dM3KzASd5EsFJ7XHGdcUnXkOlFCztAD7A/exec';
 let otData = [];
 
 function calcHours(start, end) {
